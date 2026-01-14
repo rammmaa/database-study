@@ -4,9 +4,7 @@ title: Database Study
 permalink: /
 ---
 
-# Database Study
-
-뭘 써야하지? 자유롭게 수정 부탁합니다
+뭘 써야하지? 자유롭게 수정 부탁합니다...ㅋㅋ
 
 ---
 
