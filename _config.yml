@@ -50,17 +50,20 @@ exclude:
   - _drafts
 
 collections:
-  pages:
+  jaeyeol:
     output: true
     permalink: /:collection/:path/
-  others:
+  haram:
+    output: true
+    permalink: /:collection/:path/
+  jiyoon:
     output: true
     permalink: /:collection/:path/
 
 ordered_collections:
-  - posts
-  - pages
-  - others
+  - jaeyeol
+  - haram
+  - jiyoon
 
 page_width: 800px
 
