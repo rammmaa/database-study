@@ -1,6 +1,7 @@
 ---
 title: 하람 예시 글
 author: haram
+layout: post
 ---
 
 # 하람 섹션
