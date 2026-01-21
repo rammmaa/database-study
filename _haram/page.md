@@ -4,7 +4,7 @@ author: haram
 layout: post
 ---
 
- * DBMS
+* DBMS
 	 * 왜 이걸 써야 하지? CS 수준에서 시스템적으로 어떤 일이 일어나고 있는지 보는 것이 목표
 # Database Systems Background**
 * Database / Database system
