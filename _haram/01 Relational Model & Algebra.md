@@ -33,15 +33,14 @@ layout: post
 ## Relational Model
 
 * 관계형 모델은 사용자/애플리케이션을 저수준 데이터 표현으로부터 분리하는 데이터 독립성을 제공한다. 사용자는 고수준의 애플리케이션 로직만 관여하면 되는 형태로 서비스를 만들 수 있다. DBMS는 운영 환경, DB 내용, 워크로드에 따라 저장 레이아웃을 최적화하며, 이러한 요소가 변경되면 다시 최적화한다. (re-optimize) 따라서 **물리적 데이터의 변화가 애플리케이션을 변경시키지 않는다.**
-### (1) Structure(구조)
 
+**(1) Structure(구조)**
 - 물리적 표현과 독립적으로, 관계와 그 내용을 정의한다. 각 관계는 속성들의 집합을 가지며, 각 속성은 값들의 도메인을 가진다.
 	- 데이터는 **Relation(table)** 로 표현
 	- Relation은 **attribute(column)들의 집합 + tuple(row)들의 집합
 	- 보통 relation은 **unordered set** 관점(순서 없음)
     
-### (2) Integrity(무결성)
-
+**(2) Integrity(무결성)**
 - 데이터베이스의 내용이 특정 제약을 만족하도록 보장한다. 예를 들어, "사람의 나이는 음수가 될 수 없다"같은 제약이 있다.
 	- **Constraints**
 	    - NOT NULL
@@ -49,8 +48,7 @@ layout: post
 	    - FOREIGN KEY 
 	    - CHECK
         
-### (3) Manipulation(조작)
-
+**(3) Manipulation(조작)**
 - 관계를 통해 데이터베이스의 내용을 조회하거나 수정하기 위한 선언적 API. 프로그래머는 원하는 결과만 지정하고, DB 시스템이 가장 효율적인 질의 실행 계획을 결정해 수행한다.
 	- 집합 연산과 비슷하게 query, update를 할 수 있음
 	- **Declarative** (> SQL)
@@ -86,8 +84,7 @@ layout: post
 
 * **Select (σ)**: 한 관계를 입력으로 받아, 선택 조건(predicate)을 만족하는 튜플의 부분집합을 출력한다. 이 predicate는 필터처럼 동작하며, 여러 predicate는 AND/OR 같은 논리 결합으로 조합할 수 있다.
 	* $\sigma_{p}(R)$
-	* e.g. $\sigma_{a\_id='a2'}(R)$
-	* SQL
+	* $\sigma_{a\_id='a2'}(R)$
 	* ```sql
 	  SELECT *
 	  FROM R
