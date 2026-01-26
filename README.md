@@ -4,7 +4,10 @@ title: Database Study
 permalink: /
 ---
 
-뭘 써야하지? 자유롭게 수정 부탁합니다...ㅋㅋ
+## CMU Intro to Database Systems
+해당 강의를 듣고 정리하는 스터디
+정산: 매주 월요일
+주마다 2개 lecture 듣고 정리
 
 ---
 
