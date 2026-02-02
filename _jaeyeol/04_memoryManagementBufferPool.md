@@ -1,5 +1,5 @@
 ---
-title: 02 Modern SQL
+title: 04 Memory Management & Buffer Pool
 author: jaeyeol
 layout: post
 ---
