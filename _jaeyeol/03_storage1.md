@@ -1,5 +1,5 @@
 ---
-title: 02 Modern SQL
+title: 03 Database Storage I
 author: jaeyeol
 layout: post
 ---
