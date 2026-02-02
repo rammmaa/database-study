@@ -1,0 +1,77 @@
+---
+title: 06 Storage Models & Compression
+author: jaeyeol
+layout: post
+---
+
+# Database Workloads
+OLTP: 상대적으로 적은 양의 데이터에 read/update 쿼리가 날아옴  
+OLAP: 개큰 뭉탱이 data에 대해 복잡하고 큰 (analytical) 쿼리 처리
+HTAP: 같은 DB Scheme 안에 OLTP + OLAP
+
+Relational Model의 경우 어떻게 데이터를 표현할지만 말해 주지, 어떻게 데이터를 저장할지는 말해주지 않음
+그러므로 데이터를 저장하는 방법도 고민할 필요가 있음
+
+# Storage Models
+
+## NSM
+N-ary Storage Model
+DBMS가 각 튜플에 속한 attribute들을 페이지 내의 연속된 공간에 배치
+장점: insert, upate, delete 빠름, OLTP에 좋음, index-oriented storage 사용가능(???) 
+단점: 데이터 뭉탱이거나 일부 attribute만 사용할 때 효율이 별로임, locality ㅄ, compression 할때 별로
+
+## DSM
+Decomposition Storage Model
+Column store 이라고 생각하면 됨
+같은 attribute를 연속적으로 저장 (여러 tuple 것을 한꺼번에 담음)
+attribute와 metadata를 고정길이 배열에 저장 -> page size 고정
+매 attribute마다 각각의 page에 저장
+
+특정 tuple 전체를 알아볼 때는, attribute마다 값의 길이가 고정되어 있다는 점을 이용해 고정된 offset을 사용
+
+하지만 OLAP 쿼리는 보통 여러 column을 보고 다님
+-> attribute는 columnar하게 따로 저장하고 (빠른 처리속도), 같은 tuple에 속한 attribute들의 물리적 위치를 가깝게 (spatial locality) 할 수는 없을까?
+
+## PAX
+데이터들을 특정 기준에 따라 row를 기준으로 partition
+그렇게 나온 각각의 뭉탱이를 DSM처럼 저장
+Global 메타데이터는 각각의 뭉탱이로 가는 오프셋 저장 
+각각의 뭉탱이 메타데이터는 그것의 내용에 관한 메타데이터를 저장
+
+# Compression
+쿼리를 처리할 때 주요 bottleneck은 보통 I/O
+-> disk에 페이지를 압축한 형태로 저장하고 압축된 포맷을 읽으면 I/O 처리해야 하는 양이 줄어들지 않을까?
+여기서 속도와 compression ratio 간의 tradeoff 발생 (압축하는 과정도 CPU 먹음)
+
+Goals
+- 고정길이 값을 출력해야 함
+- 압축을 최대한 나중에
+- Lossless
+Choices
+- Block-level
+- Tuple-level (NSM only)
+- Attribute-level
+- Column-level (DSM only)
+
+Naive한 알고리즘으로는, 그냥 general-purpose compression 알고리즘을 돌리는 것 (예시: MySQL)
+다만 진짜 걍 general-purpose 알고리즘을 가져온 거라서 데이터를 decompress하기 전에는 가공할 수가 없음
+decompress하지 않고 compress data를 조작하는 방법??
+
+## Columnar Compression
+여러 가지 방법들이 존재하며, 이 중 여러개를 섞어쓸수도 있음
+
+- Run-length Encoding
+  반복되는 값을 (값, 시작 위치, 개수) 로 인코딩
+  당연히 데이터가 정렬된 상태여야 할 수 있음
+- Bit Packing
+  특정 data type의 일부 비트만 사용중인 경우 (예시: int32 타입인데 값이 256 (8비트)까지밖에 없음), 실제로 쓰이는 8비트만 남기고 나머지는 모두 버림
+- Patching
+  만약 적은 양의 데이터가 분탕을쳐서 256범위 내의 데이터 100만개, 999999999가 1개 있으면?  
+  분탕값을 patching table이라는 다른 자료구조에 넣고 나머지는 그대로 압축
+- Bitmap Encoding
+  특정 attribute가 갖는 서로 다른 값의 가짓수가 적은 경우 one-hot vector처럼 만듦
+  서로 다른 값의 가짓수가 많으면 오히려 손해일 수도 있음 but Roaring Bitmap 등을 사용할 수 있긴함
+- Delta Encoding
+  연속된 값들끼리의 차이가 작을 경우 (방 온도 등) 첫 값과 값의 차이만 저장
+- Dictionary Compression
+  자주 나오는 값을 딕셔너리에 저장하고 key를 짧은걸로
